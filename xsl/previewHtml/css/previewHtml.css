@@ -1,0 +1,235 @@
+/* 
+//#prj# Clic.EDIt
+//#fic# 'css/previewHtml.css'
+//#fomat# UTF-8, unix.newline ( or extract entities for '\r') 
+//#aim# 'include in '../previewHtml.xsl'
+ * 
+ * Sytle prefix
+ * sp* : stylePara
+ * st* : styleText
+ * sb* : styleBlock 
+ */
+
+
+/* 
+* {
+    padding: 0;
+    margin: 0;
+}
+ */
+
+
+.ce_sbTopBarParent {
+    margin-top: 3rem;    
+}
+
+#ce_contactList {
+    column-count: 3;
+}
+
+body {
+    font-family: calibri, verdana;
+    padding: 1em;
+    background-color: rgb(204, 204, 204);
+    font-size: 1.2rem;
+}
+
+a:link {
+    color: #000099;
+}
+
+a:link {
+    color: #990099;
+}
+
+.ce_stDetail {
+    font-weight: normal;
+    text-align: left;
+    padding: 0 1rem 0px 1rem;
+    font-size: 1rem;
+}
+
+.fontcolored {
+    color: #F5F3F3;
+}
+
+#Details {
+    display: none;
+}
+
+#Details.border_top {
+    border-top: 1pt solid #00b0c1;
+    display: none;
+}
+
+#Details.border_bottom {
+    border-top: 1pt solid #00b0c1;
+    display: none;
+    color: #00b0c1;
+}
+
+.ceBorderTop3,  .row.ceBorderTop3 {
+    border-top: 3px solid #000000;
+}
+
+#responsive-image { /*  Logo M.  */
+    /* [debug] width:326px;*/
+
+    width: 100px;
+    height: auto;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table.borders td { /*  NOborders  */
+    border: 1px solid black;
+    /* [debug] border: 1px solid black; */
+    border-top: solid 1px #FFFFFF;
+    border-bottom: solid 1px #FFFFFF;
+    border-left: solid 1px #FFFFFF;
+    border-right: solid 1px #FFFFFF;
+}
+
+tr.border_top td {
+    border-top: 1pt solid #00b0c1;
+}
+
+tr.border_bottom td {
+    border-bottom: 1pt solid #00b0c1;
+}
+
+td h3,
+.spDocTitle {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+td h3 .bleu {
+    font-size: inherit;
+    text-align: left;
+    font-size: 24px;
+}
+
+td {
+    font-weight: normal;
+    text-align: left;
+    padding: 0px 5px 0px 5px;
+    /* padding:.3em; */
+}
+
+td .bouton {
+    font-weight: normal;
+    /* text-align:left;
+	padding:0em; */
+    padding: 2px 10px 2px 10px;
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100%;
+}
+
+td .bleu {
+    font-size: 20px;
+}
+
+.titreMachine {
+    font-family: verdana;
+}
+.rowcolsep {
+    border-bottom: solid 1px #FFFFFF;
+    border-right: solid 1px #FFFFFF;
+}
+
+.rowcolsep0 {
+    border-bottom: none;
+    border-right: none;
+}
+
+.rowsep {
+    border-bottom: solid 1px #FFFFFF;
+}
+
+.rowsep0 {
+    border-bottom: none;
+}
+
+.colsep {
+    border-right: solid 1px #FFFFFF;
+}
+
+.colsep0 {
+    border-right: none;
+}
+
+.bleu {
+    color: #3B5B8F;
+}
+
+.vert {
+    background-color: #00FF00;
+    text-align: center;
+}
+
+.rouge {
+    background-color: #FF0000;
+    text-align: center;
+}
+
+.blanc {
+    background-color: #FFFFFF;
+    text-align: center;
+}
+
+.grisF {
+    background-color: #aaaaaa;
+}
+
+.gris {
+    background-color: #cccccc;
+}
+
+.grisC {
+    background-color: #FFFFFF;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.rowcolsep.size12 {
+    font-size: 16px;
+    text-align: right;
+}
+
+.rowsep.size12 {
+    font-size: 14px;
+    text-align: left;
+}
+
+.colsep.size12 {
+    font-size: 16px;
+    text-align: right;
+}
+
+td.rowsep.bleu {
+    border-bottom: solid 2px #3B5B8F;
+}
+
+/* change la couleur de la ligne sous la souris */
+/*tr:hover{background-color:#f5f5f5}*/
+
+/* change la couleur des lignes impaires:even ou paires:odd */
+trCoul:nth-child(odd) {
+    background-color: #eeeeee
+}
+
+th {
+    background-color: #bbbbbb;
+    /*color: black;*/
+}
+
+
+/* 
+//#end# 'css/previewHtml.css'
+ */
