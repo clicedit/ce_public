@@ -12,6 +12,11 @@
     <!-- #H4# tpl niv def  -->
     <!-- ================= -->
 
+    <!-- ==== NIV0 : Empty ...-->
+    <xsl:template name="tplEmptyCell">
+        <xsl:text>&#160;</xsl:text>
+    </xsl:template>
+
     <!-- ==== NIV10 : TEXT -->
     <xsl:template name="n10">
         <xsl:comment>
@@ -63,7 +68,7 @@
 
 
     <!-- Cmt_value 'Quantity_type' : @quantity + unit  -->
-    <xsl:template match="*" mode="md_n10">
+    <xsl:template mode="md_n10" match="*">
         <!--cmt add @currency or @unit  -->
         <xsl:value-of select="."/>
         <xsl:call-template name="tplEx"/>
@@ -170,10 +175,10 @@
     
     
 
-    <xsl:template match="*" mode="md_n20">
+    <xsl:template mode="md_n20" match="*">
         <xsl:call-template name="labelByTagName"/>
         <xsl:text> </xsl:text>
-        <xsl:apply-templates select="." mode="md_n10"/>
+        <xsl:apply-templates mode="md_n10" select="."/>
     </xsl:template>
 
 
@@ -277,9 +282,9 @@
     </xsl:template>
 
 
-    <xsl:template match="*" mode="md_n30">
+    <xsl:template mode="md_n30" match="*">
         <div class="br">
-            <xsl:apply-templates mode="md_n20"/>
+            <xsl:apply-templates mode="md_n20" select="."/>
         </div>
     </xsl:template>
     

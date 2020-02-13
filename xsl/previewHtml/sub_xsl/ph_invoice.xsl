@@ -2,29 +2,22 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ce="http://www.clicedit.org/schema_1.0" xmlns:i_d="http://internal/data" exclude-result-prefixes="ce i_d" version="1.0">
     <!-- info see parent 'ph_main.xsl' -->
 
-    <!-- #H2# preinclude see 'ph_main.xsl'/'# common inclusion' -->   
-    
+    <!-- #H2# preinclude see 'ph_main.xsl'/'# common inclusion' -->
+
     <!-- #H2# TEMPLATE -->
 
     <xsl:template match="ce:InvoiceDetailRequestHeader">
-        
+
         <div class="container border">
             <div id="docAtt" class="row border">
                 <div class="col-12">
-                    <xsl:apply-templates mode="mdAttOpt" select="@invoiceId|@invoiceDate|@isInformationOnly|@purpose|@operation|@dueDate"/>
+                    <xsl:apply-templates mode="mdAttOpt" select="@invoiceId | @invoiceDate | @isInformationOnly | @purpose | @operation | @dueDate"/>
                 </div>
             </div>
             <xsl:call-template name="buyerBillTo_mdRow"/>
 
+            <xsl:call-template name="SupplierShipTo_mdRow"/>
 
-            <div class="row border">
-                <div class="col-6">
-                    <xsl:apply-templates mode="mdHeader" select="ce:Supplier"/>
-                </div>
-                <div class="col-6">
-                    <xsl:apply-templates mode="mdHeader" select="ce:ShipTo"/>
-                </div>
-            </div>
         </div>
 
         <!--Cmt: [//] Contact Liste par catagories :   -->
@@ -100,6 +93,9 @@
                             <xsl:when test="'composite' = @itemType">
                                 <xsl:value-of select="concat('[', @invoiceLineNumber, '] ')"/>
                             </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
                         </xsl:choose>
                     </div>
                     <div class="col-5">
@@ -111,22 +107,64 @@
                         </div>
                     </div>
                     <div class="col-1 text-right">
-                        <xsl:value-of select="ce:Quantity"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:Quantity">
+                                <xsl:value-of select="ce:Quantity"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                     <div class="col-1 text-left ">
-                        <xsl:value-of select="ce:Quantity/@unit"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:Quantity/@unit">
+                                <xsl:value-of select="ce:Quantity/@unit"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                     <div class="col-1 text-right">
-                        <xsl:value-of select="ce:UnitPrice/ce:Money"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:UnitPrice/ce:Money">
+                                <xsl:value-of select="ce:UnitPrice/ce:Money"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                     <div class="col-1 text-left ">
-                        <xsl:value-of select="ce:UnitPrice/ce:Money/@currency"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:UnitPrice/ce:Money/@currency">
+                                <xsl:value-of select="ce:UnitPrice/ce:Money/@currency"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                     <div class="col-1 text-right">
-                        <xsl:value-of select="ce:SubtotalAmount/ce:Money"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:SubtotalAmount/ce:Money">
+                                <xsl:value-of select="ce:SubtotalAmount/ce:Money"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                     <div class="col-1 text-left ">
-                        <xsl:value-of select="ce:SubtotalAmount/ce:Money/@currency"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:SubtotalAmount/ce:Money/@currency">
+                                <xsl:value-of select="ce:SubtotalAmount/ce:Money/@currency"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                 </div>
             </xsl:for-each>
@@ -171,13 +209,13 @@
                                 <div class="col-4 text-right">
                                     <xsl:for-each select="../ce:AdditionalMeasureDetail">
                                         <div class="br">
-                                        <xsl:call-template name="getLabel">
-                                            <xsl:with-param name="aVal" select="@type"/>
-                                        </xsl:call-template>
-                                        <xsl:text> </xsl:text>
-                                        <xsl:value-of select="."/>
+                                            <xsl:call-template name="getLabel">
+                                                <xsl:with-param name="aVal" select="@type"/>
+                                            </xsl:call-template>
+                                            <xsl:text> </xsl:text>
+                                            <xsl:value-of select="."/>
                                         </div>
-                                    </xsl:for-each>                                    
+                                    </xsl:for-each>
                                 </div>
                             </xsl:if>
                         </xsl:when>
@@ -185,8 +223,15 @@
                             <div class="col-8 text-right">
                                 <xsl:call-template name="labelByTagName"/>
                             </div>
-                            <div class="col-4 text-right">
-                                <xsl:apply-templates select="."/>
+                            <div class="4 text-right">
+                                <xsl:choose>
+                                    <xsl:when test="normalize-space(.)">
+                                        <xsl:apply-templates select="."/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:call-template name="tplEmptyCell"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </div>
                         </xsl:otherwise>
                     </xsl:choose>

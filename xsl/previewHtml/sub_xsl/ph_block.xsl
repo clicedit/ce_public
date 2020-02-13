@@ -249,6 +249,12 @@
         </div>
     </xsl:template>
     
-    
+
+    <xsl:template mode="mdTableOpt" match="ce:DocumentReference">
+        <!-- no table or div/@id=docRef generated if none ce:DocumentReference -->
+        <div id="docRef" class="container border" ce="request docRef">
+            <xsl:apply-templates mode="mdRow" select="."/>
+        </div>
+    </xsl:template>
 
 </xsl:stylesheet>

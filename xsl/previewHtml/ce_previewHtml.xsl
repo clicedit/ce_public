@@ -5,7 +5,7 @@
 #usage: Use XSLT Engine 'Saxon 6.x' to be compatible with browser <?xml-stylesheet type="text/xsl" href="file:///../../xsl/previewHtml/ce_previewHtml.xsl""?>
 #syntaxe: cmd: ce_bash.bash xslSyntaxe
 -->
-    <xsl:output method="xml" indent="yes"/>
+    <xsl:output method="html" indent="yes"/>
 
     <!-- [test] 
     <xsl:include href="./sub_xsl/ph_main.xsl"/>

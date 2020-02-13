@@ -2,8 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ce="http://www.clicedit.org/schema_1.0" xmlns:i_d="http://internal/data" exclude-result-prefixes="ce i_d" version="1.0">
     <!-- info see parent 'ph_main.xsl' -->
 
-    <!-- #H2# preinclude see 'ph_main.xsl'/'# common inclusion' -->   
-    
+    <!-- #H2# preinclude see 'ph_main.xsl'/'# common inclusion' -->
+
     <!-- #H2# TEMPLATE -->
 
     <!-- Cmt: Header  -->
@@ -41,14 +41,7 @@
             </div>
             <xsl:call-template name="buyerBillTo_mdRow"/>
 
-            <div class="row border">
-                <div class="col-6">
-                    <xsl:apply-templates mode="mdHeader" select="ce:Supplier"/>
-                </div>
-                <div class="col-6">
-                    <xsl:apply-templates mode="mdHeader" select="ce:ShipTo"/>
-                </div>
-            </div>
+            <xsl:call-template name="SupplierShipTo_mdRow"/>
         </div>
 
         <!--Cmt: [//] Contact Liste par catagories :   -->
@@ -56,10 +49,7 @@
             <xsl:call-template name="tplContactList_multiCol"/>
         </div>
 
-        <div id="docRef" class="container border">
-            <xsl:apply-templates mode="mdRow" select="./ce:DocumentReference"/>
-        </div>
-
+        <xsl:apply-templates mode="mdTableOpt" select="./ce:DocumentReference"/>
 
         <div class="container border">
             <div class="row border">
@@ -142,7 +132,14 @@
                 </xsl:if>
                 <div class="row border">
                     <div class="col-6" ce="*[1]">
-                        <xsl:apply-templates mode="mdDelivery" select="ce:OrderRequestPaperItem"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:OrderRequestPaperItem">
+                                <xsl:apply-templates mode="mdDelivery" select="ce:OrderRequestPaperItem"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                     <div class="col-3" ce="Packing">
                         <xsl:choose>
@@ -152,6 +149,9 @@
                             <xsl:when test="ce:Packing">
                                 <xsl:apply-templates select="ce:Packing"/>
                             </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
                         </xsl:choose>
                     </div>
                     <div class="col-1" ce="Quantity">
@@ -160,15 +160,32 @@
                                 <xsl:apply-templates select="ce:OrderRequestPaperItem/ce:OrderedQuantity" mode="md_n10"/>
                             </xsl:when>
                             <xsl:when test="ce:Quantity">
-                                    <xsl:apply-templates select="ce:Quantity" mode="md_n10"/>
+                                <xsl:apply-templates select="ce:Quantity" mode="md_n10"/>
                             </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
                         </xsl:choose>
                     </div>
                     <div class="col-1" ce="UnitWeight">
-                        <xsl:apply-templates select="ce:UnitWeight"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:UnitWeight">
+                                <xsl:apply-templates select="ce:UnitWeight"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                     <div class="col-1" ce="TotalWeight">
-                        <xsl:apply-templates select="ce:TotalWeight"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:TotalWeight">
+                                <xsl:apply-templates select="ce:TotalWeight"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                 </div>
             </xsl:for-each>
@@ -222,16 +239,44 @@
                         </div>
                     </div>
                     <div class="col-3" ce="Packing">
-                        <xsl:apply-templates select="ce:Packing"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:Packing">
+                                <xsl:apply-templates select="ce:Packing"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                     <div class="col-1" ce="Quantity">
-                        <xsl:apply-templates select="ce:Quantity" mode="md_n10"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:Quantity">
+                                <xsl:apply-templates select="ce:Quantity" mode="md_n10"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                     <div class="col-1" ce="UnitWeight">
-                        <xsl:apply-templates select="ce:UnitWeight"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:UnitWeight">
+                                <xsl:apply-templates select="ce:UnitWeight"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                     <div class="col-1" ce="TotalWeight">
-                        <xsl:apply-templates select="ce:TotalWeight"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:TotalWeight">
+                                <xsl:apply-templates select="ce:TotalWeight"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                 </div>
             </xsl:for-each>

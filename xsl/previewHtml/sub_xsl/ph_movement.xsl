@@ -20,17 +20,11 @@
                     </div>
                 </div>
             </xsl:if>
-            
+
             <xsl:call-template name="buyerBillTo_mdRow"/>
 
-            <div class="row border">
-                <div class="col-6">
-                    <xsl:apply-templates mode="mdHeader" select="ce:Supplier"/>
-                </div>
-                <div class="col-6">
-                    <xsl:apply-templates mode="mdHeader" select="ce:ShipTo"/>
-                </div>
-            </div>
+            <xsl:call-template name="SupplierShipTo_mdRow"/>
+
         </div>
 
         <!--Cmt: [//] Contact Liste par catagories :   -->
@@ -38,9 +32,7 @@
             <xsl:call-template name="tplContactList_multiCol"/>
         </div>
 
-        <div id="docRef" class="container border" ce="request docRef">
-            <xsl:apply-templates mode="mdRow" select="./ce:DocumentReference"/>
-        </div>
+        <xsl:apply-templates mode="mdTableOpt" select="./ce:DocumentReference"/>
 
         <div class="container border" ce="AttachmentReference, DateInfo">
             <div class="row border">
@@ -67,13 +59,15 @@
             <xsl:for-each select="ce:MovementDetails">
                 <xsl:if test="1 = position()">
                     <div class="row border bg-secondary text-white align-items-center">
-                        <div class="col-2 text-truncate" ce="ce:MovementDetails/@* != @operation"> </div>
+                        <div class="col-2 text-truncate" ce="ce:MovementDetails/@* != @operation">
                             <xsl:call-template name="getLabel">
                                 <xsl:with-param name="aVal" select="'purpose'"/>
                             </xsl:call-template>
+                        </div>
                         <div class="col-2 text-truncate" ce="ce:MovementDetails/@operation">
                             <xsl:call-template name="getLabel">
-                                <xsl:with-param name="aVal" select="'ItemDetails@operation'"/>
+                                <xsl:with-param name="aList" select="local-name()"/>
+                                <xsl:with-param name="aVal" select="'operation'"/>
                             </xsl:call-template>
                         </div>
                         <div class="col-3 text-truncate" ce="Quantity + InitialStock + FinalStock">
@@ -90,109 +84,202 @@
                 </xsl:if>
                 <div class="row border-right border-bottom border-left ceBorderTop3" ce="ce:MovementDetails - row 1/3 - 4*cols">
                     <div class="col-2 text-truncate" ce="ce:MovementDetails/@* != @operation">
-                    <xsl:if test="@sequenceNumbering">
-                        <div class="br">
-                            <xsl:value-of select="concat('[', @sequenceNumbering, ']')"/>
-                        </div>
-                    </xsl:if>
-                    <div class="br">
-                        <xsl:call-template name="getLabel">
-                            <xsl:with-param name="aVal" select="@purpose"/>
-                        </xsl:call-template>
-                    </div>
-                    <div class="br">
-                        <xsl:value-of select="@movementId"/>
-                    </div>
-                    <div class="br">
-                        <xsl:value-of select="@movementDate"/>
-                    </div>
+                        <xsl:choose>
+                            <xsl:when test="@sequenceNumbering or @purpose or @movementId or @movementDate">
+                                <xsl:if test="@sequenceNumbering">
+                                    <div class="br">
+                                        <xsl:value-of select="concat('[', @sequenceNumbering, ']')"/>
+                                    </div>
+                                </xsl:if>
+                                <div class="br">
+                                    <xsl:call-template name="getLabel">
+                                        <xsl:with-param name="aVal" select="@purpose"/>
+                                    </xsl:call-template>
+                                </div>
+                                <div class="br">
+                                    <xsl:value-of select="@movementId"/>
+                                </div>
+                                <div class="br">
+                                    <xsl:value-of select="@movementDate"/>
+                                </div>
+                                <xsl:if test="@sequenceNumbering">
+                                    <div class="br">
+                                        <xsl:value-of select="concat('[', @sequenceNumbering, ']')"/>
+                                    </div>
+                                </xsl:if>
+                                <div class="br">
+                                    <xsl:call-template name="getLabel">
+                                        <xsl:with-param name="aVal" select="@purpose"/>
+                                    </xsl:call-template>
+                                </div>
+                                <div class="br">
+                                    <xsl:value-of select="@movementId"/>
+                                </div>
+                                <div class="br">
+                                    <xsl:value-of select="@movementDate"/>
+                                </div>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                     <div class="col-2 text-truncate" ce="ce:MovementDetails/@operation">
-                        <xsl:call-template name="getLabel">
-                            <xsl:with-param name="aVal" select="'ItemDetails@operation'"/>
-                        </xsl:call-template>
+                        <xsl:choose>
+                            <xsl:when test="@operation">
+                                <xsl:call-template name="getLabel">
+                                    <xsl:with-param name="aList" select="'movement_operation_list_type'"/>
+                                    <xsl:with-param name="aVal" select="@operation"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+
                     </div>
                     <div class="col-3 text-truncate" ce="Quantity*">
-                        <xsl:apply-templates select="ce:Quantity|ce:IssueQuantity|ce:InitialStock|ce:FinalStock" mode="md_n20"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:Quantity or ce:IssueQuantity or ce:InitialStock or ce:FinalStock">
+                                <xsl:apply-templates mode="md_n30" select="ce:Quantity | ce:IssueQuantity | ce:InitialStock | ce:FinalStock"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+
                     </div>
                     <div class="col-5" ce="ItemDetails">
-                        <xsl:apply-templates select="ce:ItemDetails"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:ItemDetails">
+                                <xsl:apply-templates select="ce:ItemDetails"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+
                     </div>
                 </div>
                 <div class="row border" ce="ce:MovementDetails - row 2/3 - 4*cols">
                     <div class="col-4" ce="ShipTo">
-                        <xsl:apply-templates select="ce:ShipTo"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:ShipTo">
+                                <xsl:apply-templates select="ce:ShipTo"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+
                     </div>
                     <div class="col-4" ce="ShipFrom">
-                        <xsl:apply-templates select="ce:ShipFrom"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:ShipFrom">
+                                <xsl:apply-templates select="ce:ShipFrom"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+
                     </div>
                     <div class="col-4" ce="Extra(Extrinsic, IdReference, DocumentReference)">
-                        <xsl:if test=".//ce:Extrinsic">
-                            <xsl:apply-templates select=".//ce:Extrinsic"/>
-                        </xsl:if>
-                        <xsl:if test=".//ce:IdReference">
-                            <xsl:apply-templates select=".//ce:IdReference"/>
-                        </xsl:if>
-                        <xsl:if test=".//ce:DocumentReference">
-                            <xsl:apply-templates select=".//ce:DocumentReference"/>
-                        </xsl:if>
+                        <xsl:choose>
+                            <xsl:when test=".//ce:Extrinsic or .//ce:IdReference or .//ce:DocumentReference">
+                                <xsl:if test=".//ce:Extrinsic">
+                                    <xsl:apply-templates select=".//ce:Extrinsic"/>
+                                </xsl:if>
+                                <xsl:if test=".//ce:IdReference">
+                                    <xsl:apply-templates select=".//ce:IdReference"/>
+                                </xsl:if>
+                                <xsl:if test=".//ce:DocumentReference">
+                                    <xsl:apply-templates select=".//ce:DocumentReference"/>
+                                </xsl:if>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+
                         <!-- missing elements : should not match-->
                         <xsl:call-template name="nLoopExceptBr">
                             <xsl:with-param name="aExcept">!Quantity!IssueQuantity!InitialStock!FinalStock!ItemDetails!ShipTo!ShipFrom!OrderDetails!Reason!Comment!Extrinsic!DocumentReference!</xsl:with-param>
                         </xsl:call-template>
+
                     </div>
                     <div class="col-4 text-truncate" ce="OrderDetails">
-                        <xsl:apply-templates select="ce:OrderDetails"/>
+                        <xsl:choose>
+                            <xsl:when test="ce:OrderDetails">
+                                <xsl:apply-templates select="ce:OrderDetails"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                 </div>
-                <div class="row border" ce="ce:MovementDetails - row 3/3">
+                <div class="row border" ce="ce:MovementDetails - row 3/3 2*cols">
                     <div class="col-6" ce="Reason">
-                        <xsl:if test="ce:Reason">
-                            <div class="br">
-                                <xsl:call-template name="getSpanLabel">
-                                    <xsl:with-param name="aVal">Reason</xsl:with-param>
-                                </xsl:call-template>
-                            </div>
-                            <xsl:apply-templates select="ce:Reason"/>
-                        </xsl:if>
+                        <xsl:choose>
+                            <xsl:when test="ce:Reason">
+                                <div class="br">
+                                    <xsl:call-template name="getSpanLabel">
+                                        <xsl:with-param name="aVal">Reason</xsl:with-param>
+                                    </xsl:call-template>
+                                </div>
+                                <xsl:apply-templates select="ce:Reason"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+
                     </div>
                     <div class="col-6" ce="Comment">
-                        <xsl:if test="./ce:OrderDetails/ce:OrderDesc">
-                            <div class="br">
-                                <xsl:call-template name="getSpanLabel">
-                                    <xsl:with-param name="aVal">OrderDesc</xsl:with-param>
-                                </xsl:call-template>
-                            </div>
-                            <xsl:apply-templates select="./ce:OrderDetails/ce:OrderDesc"/>
-                        </xsl:if>
-                        <xsl:if test=".//ce:Comment">
-                            <div class="br">
-                                <xsl:call-template name="getSpanLabel">
-                                    <xsl:with-param name="aVal">Comment</xsl:with-param>
-                                </xsl:call-template>
-                            </div>
-                            <xsl:if test="ce:ItemDetails/ce:PaperItem/ce:Comment">
-                                <xsl:call-template name="getSpanLabel">
-                                    <xsl:with-param name="aVal">PaperItem</xsl:with-param>
-                                </xsl:call-template>
-                                <xsl:apply-templates select="ce:ItemDetails/ce:PaperItem/ce:Comment"/>
-                            </xsl:if>
-                            <xsl:if test="ce:ItemDetails/ce:BookItem/ce:Comment">
-                                <xsl:call-template name="getSpanLabel">
-                                    <xsl:with-param name="aVal">BookItem</xsl:with-param>
-                                </xsl:call-template>
-                                <xsl:apply-templates select="ce:ItemDetails/ce:BookItem/ce:Comment"/>
-                            </xsl:if>
-                            <xsl:if test="ce:ItemDetails/ce:Comment">
-                                <xsl:call-template name="getSpanLabel">
-                                    <xsl:with-param name="aVal">ItemDetails</xsl:with-param>
-                                </xsl:call-template>
-                                <xsl:apply-templates select="ce:ItemDetails/ce:Comment"/>
-                            </xsl:if>
-                            <xsl:if test="ce:Comment">
-                                <xsl:apply-templates select="ce:Comment"/>
-                            </xsl:if>
-                        </xsl:if>
+                        <xsl:choose>
+                            <xsl:when test="./ce:OrderDetails/ce:OrderDesc or .//ce:Comment">
+                                <xsl:if test="./ce:OrderDetails/ce:OrderDesc">
+                                    <div class="br">
+                                        <xsl:call-template name="getSpanLabel">
+                                            <xsl:with-param name="aVal">OrderDesc</xsl:with-param>
+                                        </xsl:call-template>
+                                    </div>
+                                    <xsl:apply-templates select="./ce:OrderDetails/ce:OrderDesc"/>
+                                </xsl:if>
+                                <xsl:if test=".//ce:Comment">
+                                    <div class="br">
+                                        <xsl:call-template name="getSpanLabel">
+                                            <xsl:with-param name="aVal">Comment</xsl:with-param>
+                                        </xsl:call-template>
+                                    </div>
+                                    <xsl:if test="ce:ItemDetails/ce:PaperItem/ce:Comment">
+                                        <xsl:call-template name="getSpanLabel">
+                                            <xsl:with-param name="aVal">PaperItem</xsl:with-param>
+                                        </xsl:call-template>
+                                        <xsl:apply-templates select="ce:ItemDetails/ce:PaperItem/ce:Comment"/>
+                                    </xsl:if>
+                                    <xsl:if test="ce:ItemDetails/ce:BookItem/ce:Comment">
+                                        <xsl:call-template name="getSpanLabel">
+                                            <xsl:with-param name="aVal">BookItem</xsl:with-param>
+                                        </xsl:call-template>
+                                        <xsl:apply-templates select="ce:ItemDetails/ce:BookItem/ce:Comment"/>
+                                    </xsl:if>
+                                    <xsl:if test="ce:ItemDetails/ce:Comment">
+                                        <xsl:call-template name="getSpanLabel">
+                                            <xsl:with-param name="aVal">ItemDetails</xsl:with-param>
+                                        </xsl:call-template>
+                                        <xsl:apply-templates select="ce:ItemDetails/ce:Comment"/>
+                                    </xsl:if>
+                                    <xsl:if test="ce:Comment">
+                                        <xsl:apply-templates select="ce:Comment"/>
+                                    </xsl:if>
+                                </xsl:if>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="tplEmptyCell"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
                 </div>
             </xsl:for-each>
@@ -238,8 +325,9 @@
             <xsl:for-each select="./ce:Request/ce:MovementRequest">
                 <!-- Cmt_Push: body -->
 
-                <xsl:call-template name="nLoopExceptBr">
+                <xsl:call-template name="nLoopExcept">
                     <!-- call : MovementRequestHeader  -->
+                    <xsl:with-param name="aSep">!none</xsl:with-param>
                     <xsl:with-param name="aExcept">!MovementDetails!Comment!Extrinsic!</xsl:with-param>
                 </xsl:call-template>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ce="http://www.clicedit.org/schema_1.0" xmlns:i_d="http://internal/data" xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="xsi ce i_d exslt" version="1.0">
 
-<!--
+    <!--
     ****************************************************
     *                                                  *
 	*                    CLIC.EDIT                     *
@@ -56,16 +56,16 @@ xmlns:i_d="http://internal/data"
     <!--Cmt: common resouces in "xsl/lib" -->
 
     <!-- $pDirPrefXsl : prefix path to 'Schema/xsl' dir  -->
-    
-    
+
+
     <xsl:variable name="optResources">web</xsl:variable>
     <xsl:param name="pDirPrefXsl">
         <xsl:choose>
-            <xsl:when test="'web' = $optResources">https://dduphil.github.io/cep</xsl:when>
-            <xsl:otherwise>../../xsl/</xsl:otherwise>
+            <xsl:when test="'web' = $optResources">https://e-brochard.github.io/ce_public/xsl</xsl:when>
+            <xsl:otherwise>../../xsl</xsl:otherwise>
         </xsl:choose>
     </xsl:param>
-    
+
     <xsl:variable name="pDirImg" select="concat($pDirPrefXsl, '/lib/img')"/>
 
     <xsl:variable name="optBootstrap">web-v4</xsl:variable>
@@ -93,7 +93,7 @@ xmlns:i_d="http://internal/data"
     <xsl:include href="./ph_delivery.xsl"/>
     <xsl:include href="./ph_movement.xsl"/>
     <xsl:include href="./ph_status.xsl"/>
-    
+
 
     <!-- #H4# VARIABLES -->
 
@@ -109,7 +109,7 @@ xmlns:i_d="http://internal/data"
                 <dbg-i_doc_type>
                     <xsl:copy-of select="$i_doc_type"/>
                 </dbg-i_doc_type>
-                <dbg-date v="{$i_doc_date}"/> 
+                <dbg-date v="{$i_doc_date}"/>
                 <dbg-vLang>
                     <xsl:copy-of select="$vLang"/>
                 </dbg-vLang>
@@ -122,7 +122,7 @@ xmlns:i_d="http://internal/data"
         </xsl:choose>
         <xsl:text>
 </xsl:text>
-        
+
     </xsl:template>
 
     <xsl:template name="break">
@@ -196,7 +196,7 @@ xmlns:i_d="http://internal/data"
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <xsl:choose>
             <xsl:when test="'localCss' = $optCss">
-                <link rel="stylesheet" href="{concat($pDirPrefXsl, '/previewHtml/css/previewHtml.css')}"/>
+                <link rel="stylesheet" href="{concat($pDirPrefXsl, '/previewHtml/css/previewHtml.css')}" crossorigin="anonymous"/>
             </xsl:when>
             <xsl:when test="'webCss' = $optCss">
                 <link rel="stylesheet" href="{concat($pDirPrefXsl, '/previewHtml/css/previewHtml.css')}" crossorigin="anonymous"/>
@@ -248,12 +248,18 @@ xmlns:i_d="http://internal/data"
 
     <xsl:template name="tplDocHeader">
         <!-- apply mode mHeader on 1 of all document header -->
-        <xsl:apply-templates mode="mdHeader" select="/ce:ClicEdit/ce:Request/ce:OrderRequest/ce:OrderRequestHeader | /ce:ClicEdit/ce:Request/ce:OrderRequestResponse | /ce:ClicEdit/ce:Request/ce:StatusRequest | /ce:ClicEdit/ce:Request/ce:StatusResponse|/ce:ClicEdit/ce:Request/ce:InvoiceDetailRequest/ce:InvoiceDetailRequestHeader|/ce:ClicEdit/ce:Request/ce:InvoiceDetailRequestResponse | /ce:ClicEdit/ce:Request/ce:DeliveryRequest/ce:DeliveryRequestHeader"/>
+        <xsl:choose>
+            <xsl:when test="/ce:ClicEdit/ce:Request/ce:OrderRequest/ce:OrderRequestHeader or /ce:ClicEdit/ce:Request/ce:OrderRequestResponse or /ce:ClicEdit/ce:Request/ce:StatusRequest or /ce:ClicEdit/ce:Request/ce:StatusResponse or /ce:ClicEdit/ce:Request/ce:InvoiceDetailRequest/ce:InvoiceDetailRequestHeader or /ce:ClicEdit/ce:Request/ce:InvoiceDetailRequestResponse or /ce:ClicEdit/ce:Request/ce:DeliveryRequest/ce:DeliveryRequestHeader or /ce:ClicEdit/ce:Request/ce:MovementRequest/ce:MovementRequestHeader ">
+                <xsl:apply-templates mode="mdHeader" select="/ce:ClicEdit/ce:Request/ce:OrderRequest/ce:OrderRequestHeader | /ce:ClicEdit/ce:Request/ce:OrderRequestResponse | /ce:ClicEdit/ce:Request/ce:StatusRequest | /ce:ClicEdit/ce:Request/ce:StatusResponse | /ce:ClicEdit/ce:Request/ce:InvoiceDetailRequest/ce:InvoiceDetailRequestHeader | /ce:ClicEdit/ce:Request/ce:InvoiceDetailRequestResponse | /ce:ClicEdit/ce:Request/ce:DeliveryRequest/ce:DeliveryRequestHeader | /ce:ClicEdit/ce:Request/ce:MovementRequest/ce:MovementRequestHeader "/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="tplEmptyCell"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 
-    <xsl:template mode="mdHeader" match="ce:OrderRequestHeader |ce:OrderRequestResponse | ce:StatusRequest | ce:StatusResponse| ce:InvoiceDetailRequestHeader| ce:InvoiceDetailRequestResponse | ce:DeliveryRequestHeader">
-        <div class="col-6">
+    <xsl:template mode="mdHeader" match="ce:OrderRequestHeader | ce:OrderRequestResponse | ce:StatusRequest | ce:StatusResponse | ce:InvoiceDetailRequestHeader | ce:InvoiceDetailRequestResponse | ce:DeliveryRequestHeader | ce:MovementRequestHeader">
             <div>
                 <xsl:call-template name="getSpanLabel">
                     <xsl:with-param name="aVal" select="$i_doc_dt"/>
@@ -270,7 +276,6 @@ xmlns:i_d="http://internal/data"
                 </xsl:call-template>
                 <xsl:value-of select="substring-after($i_doc_date, '.')"/>
             </div>
-        </div>
     </xsl:template>
 
 
@@ -298,11 +303,11 @@ xmlns:i_d="http://internal/data"
             </xsl:choose>
         </xsl:variable>
 
-        <div>
+        <div ce="Contact_type mdHeader">
             <xsl:call-template name="getSpanLabel">
                 <xsl:with-param name="aVal" select="$iTag"/>
             </xsl:call-template>
-            <span class="display-6">
+            <span class="" ce="display-6">
                 <xsl:value-of select="$aIdentity"/>
                 <xsl:text> </xsl:text>
                 <xsl:apply-templates select="ce:Name"/>
@@ -454,20 +459,16 @@ xmlns:i_d="http://internal/data"
                                 </h1>
                             </div>
                             <!-- cmt: docu.type + details  -->
-                            <xsl:call-template name="tplDocHeader"/>
+                            <div class="col-9">
+                                <xsl:call-template name="tplDocHeader"/>
+                            </div>
                         </div>
 
                         <!-- Cmt: [//] From + To -->
-                        <div class="row">
-                            <div class="col-6 border">
-                                <xsl:apply-templates select="ce:From" mode="mdHeader"/>
-                            </div>
-                            <div class="col-6 border">
-                                <xsl:apply-templates select="ce:To" mode="mdHeader"/>
-                            </div>
-                        </div>
+                        <xsl:call-template name="fromTo_mdRow"/>
+
                     </div>
-                    <div class="container">                    
+                    <div class="container">
                         <xsl:for-each select="ce:Sender">
                             <!-- call : UserAgent -->
                             <xsl:call-template name="nLoopExceptBr">

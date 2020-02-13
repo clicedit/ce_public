@@ -14,10 +14,30 @@
         <!--Cmt: [@ ce:IdReference|ce:Extrinsic, parent level] -->
         <div class="row border">
             <div class="col-6">
-                <xsl:call-template name="lst_IdReference"/>
+                <xsl:choose>
+                    <xsl:when test="ce:IdReference">
+                        <xsl:for-each select="ce:IdReference">
+                            <xsl:apply-templates select="."/>
+                            <br/>
+                        </xsl:for-each>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
             <div class="col-6">
-                <xsl:call-template name="lst_Extrinsic"/>
+                <xsl:choose>
+                    <xsl:when test="ce:Extrinsic">
+                        <xsl:for-each select="ce:Extrinsic">
+                            <xsl:apply-templates select="."/>
+                            <br/>
+                        </xsl:for-each>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
         </div>
     </xsl:template>
@@ -62,7 +82,7 @@
 
 
 
-    <xsl:template mode="mdRow" match="ce:Comment | ce:Penalties | ce:OrderDesc ">
+    <xsl:template mode="mdRow" match="ce:Comment | ce:Penalties | ce:OrderDesc">
         <div class="row border">
             <div class="col-12">
                 <xsl:call-template name="labelByTagName"/>
@@ -75,17 +95,85 @@
     </xsl:template>
 
 
+    <xsl:template name="fromTo_mdRow">
+        <div class="row" ce=" From To">
+            <div class="col-6 border">
+                <xsl:choose>
+                    <xsl:when test="ce:From">
+                        <xsl:apply-templates mode="mdHeader" select="ce:From"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </div>
+            <div class="col-6 border">
+                <xsl:choose>
+                    <xsl:when test="ce:To">
+                        <xsl:apply-templates mode="mdHeader" select="ce:To"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </div>
+        </div>  
+    </xsl:template>
+
+
     <xsl:template name="buyerBillTo_mdRow">
         <!-- Cmt: [OrderRequestHeader] Buyer + BillTo  -->
         <div class="row">
             <div class="col-6 border">
-                <xsl:apply-templates select="./ce:Buyer[1]" mode="mdHeader"/>
+                <xsl:choose>
+                    <xsl:when test="./ce:Buyer[1]">
+                        <xsl:apply-templates mode="mdHeader" select="./ce:Buyer[1]"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
             <div class="col-6 border">
-                <xsl:apply-templates select="./ce:BillTo[1]" mode="mdHeader"/>
+                <xsl:choose>
+                    <xsl:when test="./ce:BillTo[1]">
+                        <xsl:apply-templates mode="mdHeader" select="./ce:BillTo[1]"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
         </div>
     </xsl:template>
+
+
+    <xsl:template name="SupplierShipTo_mdRow">
+        <div class="row border">
+            <div class="col-6" ce="Supplier">
+                <xsl:choose>
+                    <xsl:when test="ce:Supplier">
+                        <xsl:apply-templates mode="mdHeader" select="ce:Supplier"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </div>
+            <div class="col-6" ce="ShipTo">
+                <xsl:choose>
+                    <xsl:when test="ce:ShipTo">
+                        <xsl:apply-templates mode="mdHeader" select="ce:ShipTo"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </div>
+        </div>
+    </xsl:template>
+
+
 
 
     <!--Cmt_Row:  -->
@@ -97,7 +185,14 @@
                 </xsl:call-template>
             </div>
             <div class="col-9">
-                <xsl:apply-templates select="./ce:Money"/>
+                <xsl:choose>
+                    <xsl:when test="./ce:Money">
+                        <xsl:apply-templates mode="mdHeader" select="./ce:Money"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
         </div>
     </xsl:template>
@@ -107,7 +202,14 @@
     <xsl:template mode="mdRow" match="ce:Tax">
         <div class="row">
             <div class="col-3">
-                <xsl:apply-templates mode="mdTxt" select="ce:Description"/>
+                <xsl:choose>
+                    <xsl:when test="ce:Description">
+                        <xsl:apply-templates mode="mdTxt" select="ce:Description"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
             <div class="col-9">
                 <xsl:apply-templates select="ce:Money"/>
@@ -141,7 +243,7 @@
     <xsl:template match="ce:OrderReference">
         <xsl:choose>
             <xsl:when test="parent::ce:OrderDetails">
-                <xsl:apply-templates mode="md_n40" select="." />
+                <xsl:apply-templates mode="md_n40" select="."/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:apply-templates mode="mdRow" select="."/>
@@ -164,15 +266,22 @@
                 </xsl:if>
             </div>
             <div class="col-6">
-                <div>
-                    <xsl:apply-templates select="@payloadId"/>
-                </div>
-                <div>
-                    <xsl:apply-templates select="@documentId"/>
-                </div>
-                <div>
-                    <xsl:apply-templates select="@documentDate"/>
-                </div>
+                <xsl:choose>
+                    <xsl:when test="@payloadId or @documentId or @documentDate">
+                        <div>
+                            <xsl:apply-templates select="@payloadId"/>
+                        </div>
+                        <div>
+                            <xsl:apply-templates select="@documentId"/>
+                        </div>
+                        <div>
+                            <xsl:apply-templates select="@documentDate"/>
+                        </div>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
         </div>
     </xsl:template>
@@ -193,10 +302,24 @@
     <xsl:template mode="mdRow" match="ce:Sheet">
         <div class="row">
             <div class="col-3">
-                <xsl:apply-templates select="ce:GrainDirection"/>
+                <xsl:choose>
+                    <xsl:when test="ce:GrainDirection">
+                        <xsl:apply-templates select="ce:GrainDirection"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
             <div class="col-9">
-                <xsl:apply-templates select="ce:SheetSize"/>
+                <xsl:choose>
+                    <xsl:when test="ce:SheetSize">
+                        <xsl:apply-templates select="ce:SheetSize"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
         </div>
     </xsl:template>
@@ -205,32 +328,58 @@
     <xsl:template mode="mdRow" match="ce:Reel">
         <div class="row">
             <div class="col-2">
+                <!-- Cmt ce:ReelWidth required -->
                 <xsl:apply-templates select="ce:ReelWidth"/>
             </div>
             <div class="col-2">
-                <xsl:if test="ce:ReelDiameter">
-                    <xsl:apply-templates select="ce:ReelDiameter"/>
-                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="ce:ReelDiameter">
+                        <xsl:apply-templates select="ce:ReelDiameter"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
             <div class="col-2">
-                <xsl:if test="ce:ReelLength">
-                    <xsl:apply-templates select="ce:ReelLength"/>
-                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="ce:ReelLength">
+                        <xsl:apply-templates select="ce:ReelLength"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
             <div class="col-2">
-                <xsl:if test="ce:CoreDiameter">
-                    <xsl:apply-templates select="ce:CoreDiameter"/>
-                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="ce:CoreDiameter">
+                        <xsl:apply-templates select="ce:CoreDiameter"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
             <div class="col-2">
-                <xsl:if test="ce:MaxCoreDiameter">
-                    <xsl:apply-templates select="ce:MaxCoreDiameter"/>
-                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="ce:MaxCoreDiameter">
+                        <xsl:apply-templates select="ce:MaxCoreDiameter"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
             <div class="col-2">
-                <xsl:if test="ce:MaxReelWeight">
-                    <xsl:apply-templates select="ce:MaxReelWeight"/>
-                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="ce:MaxReelWeight">
+                        <xsl:apply-templates select="ce:MaxReelWeight"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
         </div>
     </xsl:template>
@@ -245,7 +394,14 @@
                 </span>
             </div>
             <div class="col-9">
-                <xsl:value-of select="./ce:Description"/>
+                <xsl:choose>
+                    <xsl:when test="ce:Description">
+                        <xsl:apply-templates select="ce:Description"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
         </div>
         <div class="row">
@@ -279,9 +435,16 @@
                 <xsl:apply-templates select="ce:WrappingType"/>
             </div>
             <div class="col-3">
-                <xsl:apply-templates select="ce:PackingWeight"/>
-                <xsl:apply-templates select="ce:MaxPackingHeight"/>
-                <xsl:apply-templates select="ce:MaxPackingWeight"/>
+                <xsl:choose>
+                    <xsl:when test="ce:PackingWeight or ce:MaxPackingHeight or ce:MaxPackingWeight">
+                        <xsl:apply-templates select="ce:PackingWeight"/>
+                        <xsl:apply-templates select="ce:MaxPackingHeight"/>
+                        <xsl:apply-templates select="ce:MaxPackingWeight"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
         </div>
         <div class="row">
@@ -291,13 +454,24 @@
                 </xsl:call-template>
             </div>
             <div class="col-6">
-                <xsl:call-template name="break">
-                    <xsl:with-param name="aVal" select="ce:Comments"/>
-                </xsl:call-template>
+                <xsl:choose>
+                    <xsl:when test="ce:Comments">
+                        <xsl:call-template name="break">
+                            <xsl:with-param name="aVal" select="ce:Comments"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
         </div>
         <xsl:call-template name="refIntExt_mdRow"/>
     </xsl:template>
+
+
+
+
 
     <!-- Cmt_push_row 'ce:BookSpecGeneral_type' -->
     <xsl:template match="ce:BookSpecGeneral">
@@ -396,7 +570,14 @@
                 </xsl:call-template>
             </div>
             <div class="col-9">
-                <xsl:apply-templates mode="mdTxt" select="."/>
+                <xsl:choose>
+                    <xsl:when test="'' != normalize-space(.)">
+                        <xsl:apply-templates mode="mdTxt" select="."/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
         </div>
     </xsl:template>
@@ -407,13 +588,34 @@
     <xsl:template mode="mdRow" match="ce:ItemOut">
         <div class="row">
             <div class="col-4">
-                <xsl:apply-templates select="@itemOutId"/>
+                <xsl:choose>
+                    <xsl:when test="@itemOutId">
+                        <xsl:apply-templates select="@itemOutId"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
             <div class="col-4">
-                <xsl:apply-templates select="@requestedDeliveryDate"/>
+                <xsl:choose>
+                    <xsl:when test="@requestedDeliveryDate">
+                        <xsl:apply-templates select="@requestedDeliveryDate"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
             <div class="col-4">
-                <xsl:apply-templates select="@requestedShipmentDate"/>
+                <xsl:choose>
+                    <xsl:when test="@requestedShipmentDate">
+                        <xsl:apply-templates select="@requestedShipmentDate"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="tplEmptyCell"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
         </div>
         <div class="row">
@@ -444,10 +646,10 @@
             </div>
         </div>
     </xsl:template>
-    
+
     <!-- Cmt mdRow to "mode normal" -->
     <xsl:template mode="mdRow" match="ce:OtherStatus">
         <xsl:apply-templates select="."/>
     </xsl:template>
-                
+
 </xsl:stylesheet>

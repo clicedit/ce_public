@@ -236,10 +236,17 @@
         </xsl:if>
 
         <xsl:choose>
+            <xsl:when test="'!none' = $aSep">
+                <xsl:for-each select="*">
+                    <xsl:if test="not(contains($aExcept, concat('!', local-name(), '!')))">
+                         <xsl:apply-templates select="."/>
+                    </xsl:if>
+                </xsl:for-each>
+            </xsl:when>
             <xsl:when test="'!br' = $aSep">
                 <xsl:for-each select="*">
                     <xsl:if test="not(contains($aExcept, concat('!', local-name(), '!')))">
-                        <div class="br">
+                        <div class="br" ce="nLoopExcept/for">
                             <xsl:apply-templates select="."/>
                         </div>
                     </xsl:if>

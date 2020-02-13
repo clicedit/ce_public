@@ -66,10 +66,9 @@
                 <!-- Cmt: [OrderRequestHeader]  QuotationDetailOrder -->
                 <xsl:apply-templates select="./ce:QuotationDetailOrder"/>
 
-                <!--Cmt: [OrderRequestHeader] DocumentReference  -->
-                <div id="docRef" class="container border-top">
-                    <xsl:apply-templates mode="mdRow" select="./ce:DocumentReference"/>
-                </div>
+                <!--Cmt: [OrderRequestHeader] DocumentReference (optional) -->
+                <xsl:apply-templates mode="mdTableOpt" select="./ce:DocumentReference"/>
+
                 <!--Cmt: [OrderRequestHeader] AttachmentReference -->
                 <xsl:for-each select="./ce:AttachmentReference">
                     <div id="attRef" class="container border-top">
