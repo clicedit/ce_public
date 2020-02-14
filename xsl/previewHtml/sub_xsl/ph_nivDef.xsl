@@ -66,7 +66,6 @@
 [/n14]</xsl:comment>
     </xsl:template>
 
-
     <!-- Cmt_value 'Quantity_type' : @quantity + unit  -->
     <xsl:template mode="md_n10" match="*">
         <!--cmt add @currency or @unit  -->
@@ -80,6 +79,7 @@
         </xsl:if>
     </xsl:template>
     
+
 
     <!-- ==== NIV20 LIGNE :span.libelle + content (sans BR) -->
     <xsl:template name="n20">
@@ -173,8 +173,10 @@
 
 
     
-    
-
+    <xsl:template mode="md_n20" match="ce:IdReference | ce:ItemReference | ce:DocumentReference">
+        <xsl:apply-templates select="."/>
+    </xsl:template>
+        
     <xsl:template mode="md_n20" match="*">
         <xsl:call-template name="labelByTagName"/>
         <xsl:text> </xsl:text>

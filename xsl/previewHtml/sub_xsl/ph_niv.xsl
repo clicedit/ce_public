@@ -11,9 +11,7 @@
     <!-- #H4# tpl by [niv] or mode -->
     <!-- ================= -->
 
-
     <!-- ==== NIV10 : TEXT -->
-
 
     <xsl:template match="ce:Name">
         <xsl:call-template name="n10"/>

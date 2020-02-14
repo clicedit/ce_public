@@ -71,6 +71,20 @@
     </xsl:template>
 
 
+    <xsl:template name="tplDeliveryAttWithIssues">
+        <xsl:if test="@withIssues">
+            <div class="ce_stDetail">
+                <xsl:call-template name="getSpanLabel">
+                    <xsl:with-param name="aVal" select="'withIssues'"/>
+                </xsl:call-template>
+                <xsl:call-template name="getLabel">
+                    <xsl:with-param name="aVal" select="@withIssues"/>
+                </xsl:call-template>
+            </div>
+        </xsl:if>
+    </xsl:template>
+
+
     <!-- Cmt: mode="mdDelivery" or 'ce:DeliveryItem/ce:OrderRequestPrintItem'  -->
     <xsl:template mode="mdDelivery" match="ce:OrderRequestPaperItem">
 
@@ -133,7 +147,8 @@
                 <div class="row border">
                     <div class="col-6" ce="*[1]">
                         <xsl:choose>
-                            <xsl:when test="ce:OrderRequestPaperItem">
+                            <xsl:when test="ce:OrderRequestPaperItem or @withIssues">
+                                <xsl:call-template name="tplDeliveryAttWithIssues"/>
                                 <xsl:apply-templates mode="mdDelivery" select="ce:OrderRequestPaperItem"/>
                             </xsl:when>
                             <xsl:otherwise>
@@ -194,8 +209,6 @@
 
 
 
-
-
     <xsl:template name="tplDeliveryItemNotPaper">
         <div class="container">
             <xsl:for-each select="ce:DeliveryItem">
@@ -231,6 +244,7 @@
 
                 <div class="row border">
                     <div class="col-6" ce="*[1]">
+                        <xsl:call-template name="tplDeliveryAttWithIssues"/>
                         <xsl:apply-templates select="*[1]"/>
                         <div class="ce_stDetail">
                             <xsl:call-template name="nLoopExceptBr">

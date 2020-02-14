@@ -53,7 +53,14 @@
 
 
 
-    <!-- Cmt_Block 'ce:MovementDetails' ctxt="ce:MovementRequest" -->
+    <!-- Cmt_Block 'ce:MovementDetails' ctxt="ce:MovementRequest"
+=================
+Lgn,Col|col 1|col 2|col 3|col 4
+Ligne 1, 4 colonnes|purpose, mouvementId, mouvementDate|operation|Quantity*|Item
+ligne 2, 4 colonnes|ShipTo|ShipFrom|Extrinsic, IdReference, DocumentReference|Order
+ligne 3, 2 colonnes|Reason|OrderDesc, Comment|
+=================
+    -->
     <xsl:template name="tplMvtDetails">
         <div class="container" ce="MovementDetails">
             <xsl:for-each select="ce:MovementDetails">
@@ -188,13 +195,13 @@
                         <xsl:choose>
                             <xsl:when test=".//ce:Extrinsic or .//ce:IdReference or .//ce:DocumentReference">
                                 <xsl:if test=".//ce:Extrinsic">
-                                    <xsl:apply-templates select=".//ce:Extrinsic"/>
+                                    <xsl:apply-templates mode="md_n30" select=".//ce:Extrinsic"/>
                                 </xsl:if>
                                 <xsl:if test=".//ce:IdReference">
-                                    <xsl:apply-templates select=".//ce:IdReference"/>
+                                    <xsl:apply-templates mode="md_n30" select=".//ce:IdReference"/>
                                 </xsl:if>
                                 <xsl:if test=".//ce:DocumentReference">
-                                    <xsl:apply-templates select=".//ce:DocumentReference"/>
+                                    <xsl:apply-templates mode="md_n30" select=".//ce:DocumentReference"/>
                                 </xsl:if>
                             </xsl:when>
                             <xsl:otherwise>
