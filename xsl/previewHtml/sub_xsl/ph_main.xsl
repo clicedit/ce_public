@@ -77,6 +77,7 @@ xmlns:i_d="http://internal/data"
     <!-- #H2# INCLUSION -->
     <!--# common inclusion -->
     <xsl:include href="./ph_docVar.xsl"/>
+    <xsl:include href="../../lib/common_xsl/i18n_labels.xsl"/>
     <xsl:include href="../../lib/common_xsl/i18n_xsl.xsl"/>
     <xsl:include href="../../lib/common_xsl/common_xsl.xsl"/>
     <xsl:include href="./ph_loop.xsl"/>

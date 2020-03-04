@@ -26,8 +26,6 @@
     </xsl:variable>
 
 
-    <xsl:variable name="vLabels" select="document('i18n_xml.xml')/i_d:labels"/>
-
     <!-- #H4# TEMPLATES -->
 
 
